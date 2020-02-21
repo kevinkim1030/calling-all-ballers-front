@@ -1,5 +1,5 @@
 import React from 'react'
-import { Map, GoogleApiWrapper, Marker } from "google-maps-react"
+import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react"
 import courts from '../courts'
 import DisplayCourtDetails from './DisplayCourtDetails'
 // import Marker from './Marker'
@@ -7,8 +7,26 @@ import DisplayCourtDetails from './DisplayCourtDetails'
 
 class DisplayMap extends React.Component {
 
-  onMarkerClick = () => {
-    console.log('marker being clicked')
+  state = {
+    showingInfoWindow: false,
+    activeMarker: {},
+    selectedPlace: {},
+  }
+
+  onMarkerClick = (props, marker, e) =>
+    this.setState({
+      selectedPlace: props,
+      activeMarker: marker,
+      showingInfoWindow: true
+    })
+
+  onMapClicked = (props) => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      })
+    }
   }
 
   render() {
@@ -22,14 +40,17 @@ class DisplayMap extends React.Component {
                                     <Marker 
                                       key={court["Id"]}
                                       name={court["Name"]}
+                                      location={court["Location"]}
                                       onClick={this.onMarkerClick}
                                       position={{lat: court["Coordinates"]["lat"], lng: court["Coordinates"]["lng"]}}
-                                      court={court}/>))
+                                      court={court}
+                                      />))
 
     return (
       <div className="map-container">
         <Map
           google={this.props.google}
+          onClick={this.onMapClicked}
           zoom={14}
           style={mapStyles}
           disableDefaultUI={true}
@@ -45,13 +66,15 @@ class DisplayMap extends React.Component {
             name={"Current Location"}
             icon={{url:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png", scaledSize: {width: 60, height: 70}}}
             /> : null}
-          {/* <Marker
-            // className="marker"
-            position={{lat: 40.7829, lng: -73.9654}}
-            name={"My Marker"}
-            onClick={this.onMarkerClick}
-          /> */}
           {displayedCourts}
+          <InfoWindow
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow}>
+              <div>
+                <h2>{this.state.selectedPlace.name}</h2>
+                <h3>{this.state.selectedPlace.location}</h3>
+              </div>
+          </InfoWindow>
         </Map>
         <DisplayCourtDetails />
       </div>
