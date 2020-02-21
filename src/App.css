@@ -36,3 +36,28 @@
     transform: rotate(360deg);
   }
 }
+
+input[type=text], input[type=password] {
+  width: 200px;
+  height: 30px;
+  opacity: 50%;
+  border:1px solid #cbc9c9;
+  padding-left:5px;
+  margin-left:-5px;
+  margin-top:3px;
+  border-radius:3px 3px 3px 3px;
+}
+
+.search-form-button {
+  width: 120px;
+  height: 36px;
+  background-color: rgb(44, 205, 216);
+  border-radius: 1mm;
+  border-color: black;
+  color: black;
+}
+
+.search {
+  width: 70%;
+  height: 100px;
+}
