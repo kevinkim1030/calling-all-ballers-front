@@ -1,5 +1,6 @@
 .App {
   /* text-align: center; */
+  /* display: flex; */
 }
 
 .search {
@@ -30,6 +31,19 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.Chatroom {
+  flex-direction: row-reverse;
+  float: right;
+  width: 50%;
+  padding: 5%
+  /* padding-right: 5%  */
+}
+
+.map-container {
+  padding: 5%;
+  /* padding-left: 5%; */
 }
 
 @keyframes App-logo-spin {

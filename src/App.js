@@ -5,6 +5,7 @@ import SearchForm from './SearchForm'
 import Login from './Login'
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Chatroom from './ChatroomContainer/Chatroom'
 
 // import { Map, GoogleApiWrapper, Polygon } from "google-maps-react"
 
@@ -44,10 +45,11 @@ class App extends React.Component {
           Log In/Sign Up
         </Button>
         {!this.state.loggedIn && <Login />}
-        {this.state.loggedIn && <SearchForm toGeoCode={this.toGeoCode} />}
-        {this.state.loggedIn && <DisplayMap coordinates={this.state.coordinates}/>}
+        {/* {this.state.loggedIn && <SearchForm toGeoCode={this.toGeoCode} />}
+        {this.state.loggedIn && <DisplayMap coordinates={this.state.coordinates}/>} */}
         <SearchForm toGeoCode={this.toGeoCode}/>
         <DisplayMap coordinates={this.state.coordinates}/>
+        <Chatroom />
       </div>
     );
 
