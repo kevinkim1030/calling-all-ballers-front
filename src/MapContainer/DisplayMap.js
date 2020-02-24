@@ -11,6 +11,19 @@ class DisplayMap extends React.Component {
     showingInfoWindow: false,
     activeMarker: {},
     selectedPlace: {},
+    courts: []
+  }
+
+  fetchCourts = () => {
+    fetch(`http://localhost:3000/courts`)
+      .then(resp => resp.json())
+      .then(courtData => this.setState({
+        courts: courtData
+      }))
+  }
+
+  componentDidMount(){
+    this.fetchCourts()
   }
 
   onMarkerClick = (props, marker, e) =>
@@ -29,22 +42,47 @@ class DisplayMap extends React.Component {
     }
   }
 
+  newDisplayedCourts = () => {
+    return this.state.courts.map(court => {
+      return <Marker 
+        key={court.id}
+        name={court.name}
+        location={court.location}
+        onClick={this.onMarkerClick}
+        position={{lat: court.lat, lng: court.lng}}
+        court={court}
+    />})
+  }
+
+
   render() {
+    console.log(this.props)
     const mapStyles = {
       width: "600px",
       height: "600px"
     };
     console.log(courts)
+    console.log(this.state.courts)
 
-    let displayedCourts = courts.map(court => (
-                                    <Marker 
-                                      key={court["Id"]}
-                                      name={court["Name"]}
-                                      location={court["Location"]}
-                                      onClick={this.onMarkerClick}
-                                      position={{lat: court["Coordinates"]["lat"], lng: court["Coordinates"]["lng"]}}
-                                      court={court}
-                                      />))
+    // let displayedCourts = courts.map(court => (
+    //                                 <Marker 
+    //                                   key={court["Id"]}
+    //                                   name={court["Name"]}
+    //                                   location={court["Location"]}
+    //                                   onClick={this.onMarkerClick}
+    //                                   position={{lat: court["Coordinates"]["lat"], lng: court["Coordinates"]["lng"]}}
+    //                                   court={court}
+    //                                   />))
+
+    // let newDisplayedCourts = this.state.courts.map(court => (
+    //                                 <Marker 
+    //                                   key={court.id}
+    //                                   name={court.name}
+    //                                   location={court.location}
+    //                                   onClick={this.onMarkerClick}
+    //                                   position={{lat: court.coordinates.lat, lng: court.coordiates.lng}}
+    //                                   court={court}
+    //                                   />))
 
     return (
       <div className="map-container">
@@ -61,12 +99,13 @@ class DisplayMap extends React.Component {
           streetViewControl={true}
           zoomControl={true}
         >
-          {this.props.coordinates.lat !== "" ? <Marker 
+          {this.props.coordinates.lat !== "" && <Marker 
             position={{lat: this.props.coordinates.lat, lng: this.props.coordinates.lng}}
             name={"Current Location"}
             icon={{url:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png", scaledSize: {width: 60, height: 70}}}
-            /> : null}
-          {displayedCourts}
+            />}
+          {this.newDisplayedCourts()}
+          {/* {displayedCourts} */}
           <InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}>
@@ -76,7 +115,7 @@ class DisplayMap extends React.Component {
               </div>
           </InfoWindow>
         </Map>
-        <DisplayCourtDetails />
+        {/* <DisplayCourtDetails /> */}
       </div>
      
     )
