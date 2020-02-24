@@ -18,7 +18,9 @@ class SearchForm extends React.Component{
     event.preventDefault()
     this.props.toGeoCode(this.state)
     this.setState({
-      searchInput: ""
+      street: "",
+      city: "",
+      stateInitials: ""
     })
 
   }
@@ -26,7 +28,7 @@ class SearchForm extends React.Component{
   render(){
     return(
       <div className="search">
-        Enter Your Location
+        <h2>Enter Your Location</h2>
         <form onSubmit={this.submitHandler}>
           <input type="text" name="street" value={this.state.street} onChange={this.changeHandler} placeholder="Street"/>
           <input type="text" name="city" value={this.state.city} onChange={this.changeHandler} placeholder="City"/>

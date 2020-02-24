@@ -2,13 +2,16 @@ import React from 'react'
 import './App.css'
 import DisplayMap from './MapContainer/DisplayMap'
 import SearchForm from './SearchForm'
-
+import Login from './Login'
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 // import { Map, GoogleApiWrapper, Polygon } from "google-maps-react"
 
 class App extends React.Component {
 
   state = {
+    loggedIn: false,
     coordinates:{
       lat: 40.7829,
       lng: -73.9654
@@ -34,7 +37,16 @@ class App extends React.Component {
     console.log(this.state.coordinates)
     return (
       <div className="App">
-        <SearchForm toGeoCode={this.toGeoCode} />
+        <Button 
+          variant="contained" 
+          color="primary" 
+          href="/login">
+          Log In/Sign Up
+        </Button>
+        {!this.state.loggedIn && <Login />}
+        {this.state.loggedIn && <SearchForm toGeoCode={this.toGeoCode} />}
+        {this.state.loggedIn && <DisplayMap coordinates={this.state.coordinates}/>}
+        <SearchForm toGeoCode={this.toGeoCode}/>
         <DisplayMap coordinates={this.state.coordinates}/>
       </div>
     );
