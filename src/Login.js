@@ -6,8 +6,8 @@ class LoginForm extends React.Component{
   render(){
     return(
       <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
-          <Header as='h1' color='teal' textAlign='center'>
+        <Grid.Column  className="login-form" style={{ maxWidth: 450 }}>
+          <Header as='h1' color='orange' textAlign='center'>
             <Image src='/favicon.ico' /> Log-in to your account
           </Header>
           <Form size='large'>

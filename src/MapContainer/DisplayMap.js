@@ -57,32 +57,12 @@ class DisplayMap extends React.Component {
   render() {
     console.log(this.props)
     const mapStyles = {
-      width: "700px",
-      height: "700px"
+      width: "900px",
+      height: "900px"
     };
     console.log(courts)
     console.log(this.state.courts)
     let coords = {lat: this.props.coordinates.lat, lng: this.props.coordinates.lng}
-
-    // let displayedCourts = courts.map(court => (
-    //                                 <Marker 
-    //                                   key={court["Id"]}
-    //                                   name={court["Name"]}
-    //                                   location={court["Location"]}
-    //                                   onClick={this.onMarkerClick}
-    //                                   position={{lat: court["Coordinates"]["lat"], lng: court["Coordinates"]["lng"]}}
-    //                                   court={court}
-    //                                   />))
-
-    // let newDisplayedCourts = this.state.courts.map(court => (
-    //                                 <Marker 
-    //                                   key={court.id}
-    //                                   name={court.name}
-    //                                   location={court.location}
-    //                                   onClick={this.onMarkerClick}
-    //                                   position={{lat: court.coordinates.lat, lng: court.coordiates.lng}}
-    //                                   court={court}
-    //                                   />))
 
     return (
       <div className="map-container">
@@ -127,7 +107,6 @@ class DisplayMap extends React.Component {
               </div>
           </InfoWindow>
         </Map>
-        {/* <DisplayCourtDetails /> */}
       </div>
      
     )
