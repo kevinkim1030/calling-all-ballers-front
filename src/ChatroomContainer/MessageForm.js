@@ -21,7 +21,10 @@ class MessageForm extends Component {
       },
       body: JSON.stringify(message)
     })
-    .then(resp => resp.json())
+      .then(resp => resp.json())
+      // .then(message => {
+      // this.props.addMessage(message)
+      // })
   }
 
   handleSubmit = e => {
@@ -31,14 +34,11 @@ class MessageForm extends Component {
     this.setState({
       value: ""
     })
-    // .then(message => {
-    //   this.props.addMessage(message)
-    // })
   }
 
   render() {
     return (
-      <div className="ui secondary segment">
+      <div className="ui secondary segment message-form">
         <form onSubmit={this.handleSubmit} action="">
           <div className="ui fluid input">
             <input
@@ -46,8 +46,8 @@ class MessageForm extends Component {
               value={this.state.value}
               type="text"
             />
-            <button className="ui basic blue button" type="submit">
-              New Message
+            <button  className="ui basic blue button" type="submit">
+              Send
             </button>
           </div>
         </form>

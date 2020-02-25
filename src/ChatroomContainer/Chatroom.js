@@ -1,13 +1,15 @@
 import React from 'react'
 import MessageForm from './MessageForm'
-import MessageList from './MessageList'
+import OpenedChatroom from './OpenedChatroom'
+import AllChatrooms from './AllChatrooms'
 import { ActionCableConsumer } from 'react-actioncable-provider'
+
 
 class Chatroom extends React.Component{
   
   state = {
     displayedMessages: [],
-    newMessages: []
+    channel: 'general'
   }
 
   fetchChatroom = (chatroomId) => {
@@ -26,40 +28,39 @@ class Chatroom extends React.Component{
   addMessage = message => {
     this.setState(prevState => {
       return {
-        newMessages: [...prevState.newMessages, message]
-      }
-    })
-  }
-
-  handleDisplayMessages = () => {
-    this.setState(prevState => {
-      return {
-        displayedMessages: [
-          ...prevState.newMessages,
-          ...prevState.displayedMessages
-        ]
+        displayedMessages: [...prevState.displayedMessages, message]
       }
     })
   }
 
   render(){
-    const {displayedMessages, newMessages} = this.state
+    const {displayedMessages} = this.state
     console.log(displayedMessages)
     return (
-      <div className="Chatroom">
-        <ActionCableConsumer
-          channel={{ channel: "ChatroomChannel"}}
-          onReceived={(message) => {
-            console.log(message)
-            this.addMessage(message)
-          }}
-        />
-        <MessageList 
-          handleDisplayMessages={this.handleDisplayMessages}
-          newMessageCount={newMessages.length}
-          messages={displayedMessages}
-        />
-        <MessageForm addMessage={this.addMessage}/>
+      <div>
+        <div className="Chatroom">
+          <ActionCableConsumer
+            channel={{ channel: "ChatroomChannel"}}
+            onReceived={(message) => {
+              console.log(message)
+              this.addMessage(message)
+            }}
+          />
+          <AllChatrooms />
+          <h2>General Chat</h2>
+          <div className="chat">
+            <OpenedChatroom 
+              handleDisplayMessages={this.handleDisplayMessages}
+              messages={displayedMessages}
+            />
+          </div>
+          <div className="chat-form">
+            <MessageForm 
+              addMessage={this.addMessage}
+              handleDisplayMessages={this.handleDisplayMessages}
+            />
+          </div>
+        </div>
       </div>
     )
   }
