@@ -1,7 +1,7 @@
 import React from 'react'
-import { Map, GoogleApiWrapper, Marker, InfoWindow, Circle } from "google-maps-react"
-import courts from '../courts'
-import DisplayCourtDetails from './DisplayCourtDetails'
+import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react"
+// import courts from '../courts'
+// import DisplayCourtDetails from './DisplayCourtDetails'
 
 
 class DisplayMap extends React.Component {
@@ -55,15 +55,13 @@ class DisplayMap extends React.Component {
 
 
   render() {
-    console.log(this.props)
+    console.log(this.state.courts)
     const mapStyles = {
       width: "900px",
       height: "900px"
-    };
-    console.log(courts)
-    console.log(this.state.courts)
+    }
     let coords = {lat: this.props.coordinates.lat, lng: this.props.coordinates.lng}
-
+    
     return (
       <div className="map-container">
         <Map
