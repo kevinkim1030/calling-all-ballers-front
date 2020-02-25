@@ -46,19 +46,21 @@ class Chatroom extends React.Component{
               this.addMessage(message)
             }}
           />
-          <AllChatrooms />
-          <h2>General Chat</h2>
-          <div className="chat">
-            <OpenedChatroom 
-              handleDisplayMessages={this.handleDisplayMessages}
-              messages={displayedMessages}
-            />
-          </div>
-          <div className="chat-form">
-            <MessageForm 
-              addMessage={this.addMessage}
-              handleDisplayMessages={this.handleDisplayMessages}
-            />
+          <div className="chat-container">
+            <AllChatrooms />
+            <h2>General Chat</h2>
+            <div className="chat">
+              <OpenedChatroom 
+                handleDisplayMessages={this.handleDisplayMessages}
+                messages={displayedMessages}
+              />
+            </div>
+            <div className="chat-form">
+              <MessageForm 
+                addMessage={this.addMessage}
+                handleDisplayMessages={this.handleDisplayMessages}
+              />
+            </div>
           </div>
         </div>
       </div>
