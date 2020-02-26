@@ -11,26 +11,27 @@ class MessageForm extends Component {
     })
   }
 
-  createMessage = (message) => {
-    console.log(message)
+  createMessage = () => {
+    let postObj = {content: this.state.value, chatroom_id: 1, user_id: this.props.currentUser.id}
+    // debugger
     fetch(`http://localhost:3000/messages`, {
       method: 'POST',
       headers: {
         'content-type':'application/json',
         accepts: 'application/json'
       },
-      body: JSON.stringify(message)
+      body: JSON.stringify(postObj)
     })
-      .then(resp => resp.json())
+      // .then(resp => resp.json())
       // .then(message => {
       // this.props.addMessage(message)
       // })
   }
 
   handleSubmit = e => {
-
+    // debugger
     e.preventDefault()
-    this.createMessage({content: this.state.value, chatroom_id: 1, user_id: 1})
+    this.createMessage()
     this.setState({
       value: ""
     })
@@ -46,7 +47,7 @@ class MessageForm extends Component {
               value={this.state.value}
               type="text"
             />
-            <button  className="ui basic blue button" type="submit">
+            <button  onClick={this.handleSubmit} className="ui basic blue button" type="submit">
               Send
             </button>
           </div>

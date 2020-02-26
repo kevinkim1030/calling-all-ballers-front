@@ -5,7 +5,7 @@ import SearchForm from './SearchForm'
 import Login from './Login'
 import Button from '@material-ui/core/Button'
 import Chatroom from './ChatroomContainer/Chatroom'
-import {Grid, Segment, Divider} from 'semantic-ui-react'
+import {Grid} from 'semantic-ui-react'
 import Header from './Header'
 
 
@@ -47,7 +47,7 @@ class App extends React.Component {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        accepts: "application.json"
+        accepts: "application/json"
       },
       body: JSON.stringify(loginData)
     }).then(resp => resp.json())
@@ -66,9 +66,18 @@ class App extends React.Component {
       })
   }
 
-  onSignUp = () => {
-    this.setState({ isSignedUp: !this.state.isSignedUp })
-  }
+  // onSignUp = (loginData) => {
+  //   fetch(`http://localhost:3000/users`,{
+  //     method: "POST",
+  //     headers: {
+  //       "content-type": "application/json",
+  //       accepts: "application/json"
+  //     },
+  //     body: JSON.stringify(loginData)
+  //   }).then(resp => resp.json())
+  //     .then(data)
+  //   this.setState({ isSignedUp: !this.state.isSignedUp })
+  // }
   
   render (){
     console.log(this.state)
@@ -86,18 +95,14 @@ class App extends React.Component {
         </div>
         {!this.state.isLoggedIn && <Login onSubmit={this.onSubmit} />}
         {this.state.isLoggedIn && <SearchForm toGeoCode={this.toGeoCode} />}
-        {/* <Segment> */}
           <Grid columns={2}>
             <Grid.Column>
-              {/* <DisplayMap justify-content="left" coordinates={this.state.coordinates}/> */}
               {this.state.isLoggedIn && <DisplayMap justify-content="left" coordinates={this.state.coordinates}/>}
             </Grid.Column>
             <Grid.Column>
-              {this.state.isLoggedIn && <Chatroom justify-content="right"/>}
+              {this.state.isLoggedIn && <Chatroom currentUser={this.state.currentUser} justify-content="right"/>}
             </Grid.Column>
           </Grid>
-          {/* <Divider vertical></Divider> */}
-        {/* </Segment> */}
       </div>
     )
 
