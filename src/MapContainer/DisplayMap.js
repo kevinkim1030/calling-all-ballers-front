@@ -55,7 +55,7 @@ class DisplayMap extends React.Component {
 
 
   render() {
-    console.log(this.state.courts)
+    // console.log(this.state.courts)
     const mapStyles = {
       width: "900px",
       height: "900px"

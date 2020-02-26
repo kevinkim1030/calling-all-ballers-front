@@ -8,24 +8,21 @@ import { ActionCableConsumer } from 'react-actioncable-provider'
 class Chatroom extends React.Component{
   
   state = {
-    displayedMessages: [],
-    channel: 'general'
+    displayedMessages: []
+    // channel: 'general'
   }
 
-  fetchChatroom = (chatroomId) => {
-    // fetch(`http://localhost:3000/chatrooms/${chatroomId}`)
-    fetch(`http://localhost:3000/chatrooms/1`)
-      .then(resp => resp.json())
-      .then(data => this.setState({
-        displayedMessages: data
-      }))
-  }
-
-  componentDidMount(){
-    this.fetchChatroom()
-  }
+  // fetchChatroom = (chatroomId) => {
+  //   // fetch(`http://localhost:3000/chatrooms/${chatroomId}`)
+  //   fetch(`http://localhost:3000/chatrooms/1`)
+  //     .then(resp => resp.json())
+  //     .then(data => this.setState({
+  //       displayedMessages: data
+  //     }))
+  // }
 
   addMessage = message => {
+    console.log(message)
     this.setState(prevState => {
       return {
         displayedMessages: [...prevState.displayedMessages, message]
@@ -33,30 +30,45 @@ class Chatroom extends React.Component{
     })
   }
 
+  fetchMessages = () => {
+    fetch(`http://localhost:3000/messages`)
+      .then(resp => resp.json())
+      .then(data => 
+        this.setState({
+        displayedMessages: data
+      })
+      )
+  }
+
+  componentDidMount(){
+    // this.fetchChatroom()
+    this.fetchMessages()
+  }
+
   render(){
-    const {displayedMessages} = this.state
-    console.log(displayedMessages)
     return (
       <div>
         <div className="Chatroom">
           <ActionCableConsumer
             channel={{ channel: "ChatroomChannel"}}
             onReceived={(message) => {
-              console.log(message)
+              // console.log(message)
               this.addMessage(message)
             }}
           />
           <div className="chat-container">
-            <AllChatrooms />
+            {/* <AllChatrooms /> */}
             <h2>General Chat</h2>
             <div className="chat">
               <OpenedChatroom 
+                currentUser={this.props.currentUser}
                 handleDisplayMessages={this.handleDisplayMessages}
-                messages={displayedMessages}
+                messages={this.state.displayedMessages}
               />
             </div>
             <div className="chat-form">
               <MessageForm 
+                currentUser={this.props.currentUser}
                 addMessage={this.addMessage}
                 handleDisplayMessages={this.handleDisplayMessages}
               />

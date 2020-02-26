@@ -1,8 +1,9 @@
 import React from 'react';
 import Message from './Message';
 
-const OpenedChatroom = ({ messages, newMessageCount, handleDisplayMessages }) =>{
-  const messageList = messages.map(message=> <Message key={message.id} message={message} />);
+const OpenedChatroom = ({ messages, currentUser }) =>{
+  debugger
+  const messageList = messages.map(message=> <Message key={message.id} currentUser={currentUser} message={message} />);
 
   return (
     <div>
