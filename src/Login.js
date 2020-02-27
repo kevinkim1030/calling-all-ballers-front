@@ -68,12 +68,12 @@ class LoginForm extends React.Component{
                 type='password'
               />
               <Button onClick={this.loginData} color='orange' fluid size='large'>
-                Login
+                Login/Sign Up
               </Button>
-              <br></br>
+              {/* <br></br>
               <Button onClick={this.props.onSignUp} color='orange' fluid size='large'>
                 Sign Up
-              </Button>
+              </Button> */}
             </Segment>
           </Form>
           {/* <Message>

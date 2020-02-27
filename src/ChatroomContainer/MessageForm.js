@@ -12,8 +12,7 @@ class MessageForm extends Component {
   }
 
   createMessage = () => {
-    let postObj = {content: this.state.value, chatroom_id: 1, user_id: this.props.currentUser.id}
-    // debugger
+    let postObj = {content: this.state.value, chatroom_id: 1, user_id: this.props.currentUser.id, username: this.props.currentUser.username}
     fetch(`http://localhost:3000/messages`, {
       method: 'POST',
       headers: {

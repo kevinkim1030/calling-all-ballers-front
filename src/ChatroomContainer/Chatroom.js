@@ -1,49 +1,65 @@
 import React from 'react'
 import MessageForm from './MessageForm'
 import OpenedChatroom from './OpenedChatroom'
-import AllChatrooms from './AllChatrooms'
 import { ActionCableConsumer } from 'react-actioncable-provider'
-
 
 class Chatroom extends React.Component{
   
   state = {
-    displayedMessages: []
-    // channel: 'general'
+    displayedMessages: [],
+    chatrooms: [],
+    activeChatroom: null
   }
 
-  // fetchChatroom = (chatroomId) => {
-  //   // fetch(`http://localhost:3000/chatrooms/${chatroomId}`)
-  //   fetch(`http://localhost:3000/chatrooms/1`)
-  //     .then(resp => resp.json())
-  //     .then(data => this.setState({
-  //       displayedMessages: data
-  //     }))
-  // }
-
-  addMessage = message => {
-    console.log(message)
-    this.setState(prevState => {
-      return {
-        displayedMessages: [...prevState.displayedMessages, message]
-      }
-    })
-  }
-
-  fetchMessages = () => {
-    fetch(`http://localhost:3000/messages`)
+  fetchChatroom = (chatroomId) => {
+    fetch(`http://localhost:3000/chatrooms/`)
       .then(resp => resp.json())
       .then(data => 
         this.setState({
-        displayedMessages: data
+        displayedMessages: data[0].messages
       })
       )
   }
 
-  componentDidMount(){
-    // this.fetchChatroom()
-    this.fetchMessages()
+  addMessage = message => {
+    this.setState(prevState => {
+      return {
+        displayedMessages: [...prevState.displayedMessages, message.message]
+      }
+    })
   }
+
+  // fetchMessages = () => {
+  //   fetch(`http://localhost:3000/messages`)
+  //     .then(resp => resp.json())
+  //     .then(data => 
+  //       this.setState(prevState => {
+  //         return{
+  //           displayedMessages: [...prevState.displayedMessages, data]
+  //         }
+  //     }))
+  // }
+
+  componentDidMount(){
+    this.fetchChatroom()
+  }
+
+  // handleReceivedChatroom = response => {
+  //   const { chatroom } = response
+  //   this.setState({
+  //     chatrooms: [...this.state.chatrooms, chatroom]
+  //   })
+  // }
+
+  // handleReceivedMessage = response => {
+  //   const { message } = response;
+  //   const chatrooms = [...this.state.chatrooms]
+  //   const chatroom = chatrooms.find(
+  //     chatroom => chatroom.id === message.chatroom_id
+  //   )
+  //   chatroom.messages = [...chatroom.messages, message]
+  //   this.setState({ chatrooms })
+  // }
 
   render(){
     return (
@@ -52,17 +68,17 @@ class Chatroom extends React.Component{
           <ActionCableConsumer
             channel={{ channel: "ChatroomChannel"}}
             onReceived={(message) => {
-              // console.log(message)
+              console.log(message)
+              // debugger
               this.addMessage(message)
             }}
-          />
+          >
           <div className="chat-container">
-            {/* <AllChatrooms /> */}
             <h2>General Chat</h2>
             <div className="chat">
               <OpenedChatroom 
                 currentUser={this.props.currentUser}
-                handleDisplayMessages={this.handleDisplayMessages}
+                // handleDisplayMessages={this.handleDisplayMessages}
                 messages={this.state.displayedMessages}
               />
             </div>
@@ -74,6 +90,7 @@ class Chatroom extends React.Component{
               />
             </div>
           </div>
+          </ActionCableConsumer>
         </div>
       </div>
     )
