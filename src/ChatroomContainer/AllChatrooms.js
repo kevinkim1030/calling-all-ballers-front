@@ -1,16 +1,12 @@
 import React from 'react'
 
-class AllChatroom extends React.Component{
-  
+class AllChatrooms extends React.Component{
 
 
   render(){
     return(
-      <div>
-        All Chatrooms
-      </div>
+      <div></div>
     )
   }
 }
-
-export default AllChatroom
+export default AllChatrooms

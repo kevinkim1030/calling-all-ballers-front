@@ -42,7 +42,7 @@ class App extends React.Component {
   }
 
   toLogIn = (loginData) => {
-    console.log(loginData)
+    console.log("loginData :", loginData)
     fetch(`http://localhost:3000/users`, {
       method: "POST",
       headers: {
@@ -80,7 +80,7 @@ class App extends React.Component {
   // }
   
   render (){
-    console.log(this.state)
+    console.log("this.state : ", this.state)
     return (
       <div className="App">
         <div className="top">
