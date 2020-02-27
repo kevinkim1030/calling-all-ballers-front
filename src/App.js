@@ -1,12 +1,15 @@
 import React from 'react'
 import './App.css'
+import { Route, Link, Switch, withRouter } from 'react-router-dom'
 import DisplayMap from './MapContainer/DisplayMap'
 import SearchForm from './SearchForm'
 import Login from './Login'
-import Button from '@material-ui/core/Button'
+import { Button } from 'semantic-ui-react'
+// import Button from '@material-ui/core/Button'
 import Chatroom from './ChatroomContainer/Chatroom'
 import {Grid} from 'semantic-ui-react'
 import Header from './Header'
+import Profile from './Profile'
 
 
 class App extends React.Component {
@@ -62,8 +65,15 @@ class App extends React.Component {
             password: userData.password
           },
           isLoggedIn: true
-        }, () => console.log("logged in state: ", this.state.isLoggedIn))
+        }, () => this.props.history.push('/main'))
       })
+  }
+
+  toLogOut = () => {
+    this.setState({
+      isLoggedIn: false,
+      currentUser: {}
+    }, () => this.props.history.push('/'))
   }
 
   // onSignUp = (loginData) => {
@@ -84,25 +94,42 @@ class App extends React.Component {
     return (
       <div className="App">
         <div className="top">
-          <Button 
-            className="logout-button"
-            variant="contained" 
-            color="primary" 
-            href="/login">
-            Log Out
-          </Button>
+          {this.state.isLoggedIn && <Button color="blue" as={Link} to="/profile">Profile</Button>}
+          {this.state.isLoggedIn && <Button color="blue" onClick={this.toLogOut}>Logout</Button>}
           <Header />
         </div>
-        {!this.state.isLoggedIn && <Login onSubmit={this.onSubmit} />}
-        {this.state.isLoggedIn && <SearchForm toGeoCode={this.toGeoCode} />}
-          <Grid columns={2}>
+          {!this.state.isLoggedIn && <Login onSubmit={this.onSubmit} />}
+        <Switch>
+          <Route
+            exact
+            path='/login'
+            render={routerProps => <Login {...routerProps} onSubmit={this.onSubmit} />}
+            />
+          <Route
+            exact
+            path='/main'
+            render={routerProps => 
+              <div>
+            <SearchForm toGeoCode={this.toGeoCode} />
+              <Grid columns={2}>
+                <Grid.Column>
+                  {this.state.isLoggedIn && <DisplayMap {...routerProps} justify-content="left" coordinates={this.state.coordinates}/>}
+                </Grid.Column>
+                <Grid.Column>
+                  {this.state.isLoggedIn && <Chatroom {...routerProps} currentUser={this.state.currentUser} justify-content="right"/>}
+                </Grid.Column>
+              </Grid>
+              </div>}
+          />
+        </Switch>
+          {/* <Grid columns={2}>
             <Grid.Column>
               {this.state.isLoggedIn && <DisplayMap justify-content="left" coordinates={this.state.coordinates}/>}
             </Grid.Column>
             <Grid.Column>
               {this.state.isLoggedIn && <Chatroom currentUser={this.state.currentUser} justify-content="right"/>}
             </Grid.Column>
-          </Grid>
+          </Grid> */}
       </div>
     )
 
@@ -110,4 +137,4 @@ class App extends React.Component {
 
 }
 
-export default App;
+export default withRouter(App)

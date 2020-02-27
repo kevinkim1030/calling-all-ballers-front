@@ -1,14 +1,17 @@
 // import dotenv from 'dotenv'
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import {ActionCableProvider } from 'react-actioncable-provider';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import './index.css'
+import App from './App'
+import * as serviceWorker from './serviceWorker'
+import { BrowserRouter as Router } from 'react-router-dom'
+import {ActionCableProvider } from 'react-actioncable-provider'
 
 ReactDOM.render(
   <ActionCableProvider url="ws://localhost:3000/cable">
-    <App />
+    <Router>
+      <App /> 
+    </Router>
   </ActionCableProvider>, 
   document.getElementById('root')
 );
