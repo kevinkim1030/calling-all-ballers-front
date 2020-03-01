@@ -33,7 +33,7 @@ class SearchForm extends React.Component{
           <h2 className="ui white header">Enter Your Location</h2>
           <Input type="text" name="street" value={this.state.street} onChange={this.changeHandler} placeholder="Street"/>
           <Input type="text" name="city" value={this.state.city} onChange={this.changeHandler} placeholder="City"/>
-          <Input type="text" name="stateInitials" value={this.state.state} onChange={this.changeHandler} placeholder="State Initials"/>
+          <Input type="text" name="stateInitials" value={this.state.stateInitials} onChange={this.changeHandler} placeholder="State Initials"/>
           <Input type="submit" value="Look Up Courts!" />
         </Form>
       </Container>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react"
-// import courts from '../courts'
-// import DisplayCourtDetails from './DisplayCourtDetails'
+import { Button } from 'semantic-ui-react'
+import DisplayCourtDetails from './DisplayCourtDetails'
 
 
 class DisplayMap extends React.Component {
@@ -10,7 +10,8 @@ class DisplayMap extends React.Component {
     showingInfoWindow: false,
     activeMarker: {},
     selectedPlace: {},
-    courts: []
+    courts: [],
+    showMap: true
   }
 
   fetchCourts = () => {
@@ -25,20 +26,25 @@ class DisplayMap extends React.Component {
     this.fetchCourts()
   }
 
-  onMarkerClick = (props, marker, e) =>
+  onMarkerClick = (props, marker, e) => {
+    this.showDetails()
     this.setState({
       selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true
+      activeMarker: marker
+      // showingInfoWindow: true
     })
+  }
 
-  onMapClicked = (props) => {
-    if (this.state.showingInfoWindow) {
-      this.setState({
-        showingInfoWindow: false,
-        activeMarker: null
-      })
-    }
+  toShowMap = () => {
+    this.setState({
+      showMap: true
+    })
+  }
+
+  showDetails = () => {
+    this.setState({
+      showMap: false
+    })
   }
 
   newDisplayedCourts = () => {
@@ -55,7 +61,6 @@ class DisplayMap extends React.Component {
 
 
   render() {
-    console.log(this.state.courts)
     const mapStyles = {
       width: "900px",
       height: "900px"
@@ -64,47 +69,31 @@ class DisplayMap extends React.Component {
     
     return (
       <div className="map-container">
+        {this.state.showMap ? 
         <Map
         className={"map"}
           google={this.props.google}
-          zoom={15}
+          zoom={16}
           initialCenter= {coords}
-
           onClick={this.onMapClicked}
           style={mapStyles}
           disableDefaultUI={true}
-          // mapType={"hybrid"}
           mapType={"street"}
           center= {coords}
           mapTypeControl={true}
           streetViewControl={true}
           zoomControl={true}
         >
-          {/* <Circle
-            radius={1609}
-            // ref={(circle) => {this._circle = circle}}
-            center={coords}
-            strokeColor='transparent'
-            strokeOpacity={0}
-            strokeWeight={5}
-            fillColor='#FF0000'
-            fillOpacity={0.2}
-          /> */}
           {this.props.coordinates.lat !== "" && <Marker 
             position={coords}
             name={"Current Location"}
             icon={{url:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png", scaledSize: {width: 60, height: 70}}}
             />}
           {this.newDisplayedCourts()} 
-          <InfoWindow
-            marker={this.state.activeMarker}
-            visible={this.state.showingInfoWindow}>
-              <div>
-                <h2>{this.state.selectedPlace.name}</h2>
-                <h3>{this.state.selectedPlace.location}</h3>
-              </div>
-          </InfoWindow>
         </Map>
+        : 
+        <DisplayCourtDetails selectedPlace={this.state.selectedPlace} toShowMap={this.toShowMap} />
+        }
       </div>
      
     )

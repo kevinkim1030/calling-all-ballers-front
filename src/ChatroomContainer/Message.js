@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Message = ({ message }) => {
-  console.log("MESSAGE", message);
+  // console.log("MESSAGE", message)
   
   return (
     <div className="event">

@@ -2,14 +2,12 @@ import React from 'react'
 import './App.css'
 import { Route, Link, Switch, withRouter } from 'react-router-dom'
 import DisplayMap from './MapContainer/DisplayMap'
+import DisplayCourtDetails from './MapContainer/DisplayCourtDetails'
 import SearchForm from './SearchForm'
 import Login from './Login'
-import { Button } from 'semantic-ui-react'
-// import Button from '@material-ui/core/Button'
+import { Button, Modal, Icon, Form, Grid } from 'semantic-ui-react'
 import Chatroom from './ChatroomContainer/Chatroom'
-import {Grid} from 'semantic-ui-react'
 import Header from './Header'
-import Profile from './Profile'
 
 
 class App extends React.Component {
@@ -18,6 +16,13 @@ class App extends React.Component {
     currentUser: {},
     isLoggedIn: false,
     isSignedUp: false,
+    showModal: false,
+    modalFormData: {
+      email: "",
+      username: "",
+      password: "",
+      passwordConfirmation: ""
+    },
     coordinates:{
       lat: 40.7829,
       lng: -73.9654
@@ -64,9 +69,43 @@ class App extends React.Component {
             username: userData.username,
             password: userData.password
           },
-          isLoggedIn: true
+          isLoggedIn: true,
+          showMap: true
         }, () => this.props.history.push('/main'))
       })
+  }
+
+  onModalFormChange = (e) => {
+    this.setState({
+      ...this.state,
+      modalFormData: {
+        ...this.state.modalFormData,
+        [e.target.name]: e.target.value
+      }
+    })
+  }
+
+  modalPush = (e) => {
+    // this.props.history.push('/main')
+    e.preventDefault()
+    let modalFormData = this.state.modalFormData
+    fetch(`http://localhost:3000/users/${this.state.currentUser.id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+        accepts: "application/json"
+      },
+      body: JSON.stringify(modalFormData)
+    })
+    this.setState({
+      showModal: false
+    })
+  }
+
+  closeModal = () => {
+    this.setState({
+      showModal: false
+    })
   }
 
   toLogOut = () => {
@@ -75,27 +114,60 @@ class App extends React.Component {
       currentUser: {}
     }, () => this.props.history.push('/'))
   }
-
-  // onSignUp = (loginData) => {
-  //   fetch(`http://localhost:3000/users`,{
-  //     method: "POST",
-  //     headers: {
-  //       "content-type": "application/json",
-  //       accepts: "application/json"
-  //     },
-  //     body: JSON.stringify(loginData)
-  //   }).then(resp => resp.json())
-  //     .then(data)
-  //   this.setState({ isSignedUp: !this.state.isSignedUp })
-  // }
   
   render (){
     console.log("this.state : ", this.state)
     return (
       <div className="App">
         <div className="top">
-          {this.state.isLoggedIn && <Button color="blue" as={Link} to="/profile">Profile</Button>}
-          {this.state.isLoggedIn && <Button color="blue" onClick={this.toLogOut}>Logout</Button>}
+          {this.state.isLoggedIn && <Modal closeIcon onClose={this.closeModal} open={this.state.showModal} trigger={<Button className="ui button" color="blue" onClick={() => this.setState({showModal: true})}>Edit Profile Info</Button>}>
+          <Modal.Header>Update Profile Info</Modal.Header>
+            <Form>
+              <Form.Field>
+                <label>Email</label>
+                <input 
+                  type="text"
+                  name="email"
+                  placeholder='Email'
+                  value={this.state.modalFormData.email}
+                  onChange={(e) => this.onModalFormChange(e)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Username</label>
+                <input 
+                  type="text"
+                  name="username"
+                  placeholder='Username'
+                  value={this.state.modalFormData.username}
+                  onChange={(e) => this.onModalFormChange(e)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Password</label>
+                <input 
+                  type="password"
+                  name="password"
+                  placeholder='Password'
+                  value={this.state.modalFormData.password}
+                  onChange={(e) => this.onModalFormChange(e)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Password Confirmation</label>
+                <input 
+                  type="password"
+                  name="passwordConfirmation"
+                  placeholder='Password Confirmation'
+                  value={this.state.modalFormData.passwordConfirmation}
+                  onChange={(e) => this.onModalFormChange(e)}
+                />
+              </Form.Field>
+              <Button type="button" onClick={(e) => this.modalPush(e)} type='submit' value="Update Profile">Update User Profile Info</Button>
+            </Form>
+          </Modal>}
+
+          {this.state.isLoggedIn && <Button className="ui button" color="blue" onClick={this.toLogOut}>Logout</Button>}
           <Header />
         </div>
           {!this.state.isLoggedIn && <Login onSubmit={this.onSubmit} />}
@@ -104,32 +176,25 @@ class App extends React.Component {
             exact
             path='/login'
             render={routerProps => <Login {...routerProps} onSubmit={this.onSubmit} />}
-            />
+          />
           <Route
             exact
             path='/main'
             render={routerProps => 
               <div>
-            <SearchForm toGeoCode={this.toGeoCode} />
-              <Grid columns={2}>
-                <Grid.Column>
-                  {this.state.isLoggedIn && <DisplayMap {...routerProps} justify-content="left" coordinates={this.state.coordinates}/>}
-                </Grid.Column>
-                <Grid.Column>
-                  {this.state.isLoggedIn && <Chatroom {...routerProps} currentUser={this.state.currentUser} justify-content="right"/>}
-                </Grid.Column>
-              </Grid>
+                <SearchForm toGeoCode={this.toGeoCode} />
+                <Grid columns={2}>
+                  <Grid.Column>
+                    {this.state.isLoggedIn && <DisplayMap {...routerProps} justify-content="left" coordinates={this.state.coordinates} />}
+                    {/* {(this.state.isLoggedIn && !this.state.showMap) && <DisplayCourtDetails {...routerProps} justify-content="left" toShowMap={this.toShowMap} />} */}
+                  </Grid.Column>
+                  <Grid.Column>
+                    {this.state.isLoggedIn && <Chatroom {...routerProps} currentUser={this.state.currentUser} justify-content="right"/>}
+                  </Grid.Column>
+                </Grid> 
               </div>}
           />
         </Switch>
-          {/* <Grid columns={2}>
-            <Grid.Column>
-              {this.state.isLoggedIn && <DisplayMap justify-content="left" coordinates={this.state.coordinates}/>}
-            </Grid.Column>
-            <Grid.Column>
-              {this.state.isLoggedIn && <Chatroom currentUser={this.state.currentUser} justify-content="right"/>}
-            </Grid.Column>
-          </Grid> */}
       </div>
     )
 

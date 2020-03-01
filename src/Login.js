@@ -6,7 +6,8 @@ class LoginForm extends React.Component{
   state = {
     email: "",
     username: "",
-    password: ""
+    password: "",
+    passwordConfirmation: ""
   }
 
   onChange = (e) => {
@@ -21,7 +22,8 @@ class LoginForm extends React.Component{
     this.setState({
       email: "",
       username: "",
-      password: ""
+      password: "",
+      passwordConfirmation: ""
     })
   }
 
@@ -67,6 +69,17 @@ class LoginForm extends React.Component{
                 placeholder='Password'
                 type='password'
               />
+              <Form.Input 
+                name="passwordConfirmation"
+                value={this.state.passwordConfirmation}
+                onChange={(e) => this.onChange(e)}
+                // required
+                fluid
+                icon='lock'
+                iconPosition='left'
+                placeholder='Password Confirmation'
+                type='password'
+              />
               <Button onClick={this.loginData} color='orange' fluid size='large'>
                 Login/Sign Up
               </Button>
@@ -76,9 +89,6 @@ class LoginForm extends React.Component{
               </Button> */}
             </Segment>
           </Form>
-          {/* <Message>
-            New to us? <a href='#'>Sign Up</a>
-          </Message> */}
         </Grid.Column>
       </Grid>
     )
