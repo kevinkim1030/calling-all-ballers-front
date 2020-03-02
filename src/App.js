@@ -2,7 +2,6 @@ import React from 'react'
 import './App.css'
 import { Route, Link, Switch, withRouter } from 'react-router-dom'
 import DisplayMap from './MapContainer/DisplayMap'
-import DisplayCourtDetails from './MapContainer/DisplayCourtDetails'
 import SearchForm from './SearchForm'
 import Login from './Login'
 import { Button, Modal, Icon, Form, Grid } from 'semantic-ui-react'
@@ -14,6 +13,7 @@ class App extends React.Component {
 
   state = {
     currentUser: {},
+    courts: [],
     isLoggedIn: false,
     isSignedUp: false,
     showModal: false,
@@ -27,6 +27,18 @@ class App extends React.Component {
       lat: 40.7829,
       lng: -73.9654
     }
+  }
+
+  fetchCourts = () => {
+    fetch(`http://localhost:3000/courts`)
+    .then(resp => resp.json())
+    .then(data => this.setState({
+      courts: data
+    }))
+  }
+
+  componentDidMount(){
+    this.fetchCourts()
   }
 
 
@@ -67,7 +79,8 @@ class App extends React.Component {
             id: userData.id,
             email: userData.email,
             username: userData.username,
-            password: userData.password
+            password: userData.password,
+            reviews: userData.reviews
           },
           isLoggedIn: true,
           showMap: true
@@ -168,7 +181,7 @@ class App extends React.Component {
           </Modal>}
 
           {this.state.isLoggedIn && <Button className="ui button" color="blue" onClick={this.toLogOut}>Logout</Button>}
-          <Header />
+          {!this.state.isLoggedIn && <Header />}
         </div>
           {!this.state.isLoggedIn && <Login onSubmit={this.onSubmit} />}
         <Switch>
@@ -182,11 +195,10 @@ class App extends React.Component {
             path='/main'
             render={routerProps => 
               <div>
-                <SearchForm toGeoCode={this.toGeoCode} />
+                {this.state.isLoggedIn && <SearchForm toGeoCode={this.toGeoCode} />}
                 <Grid columns={2}>
                   <Grid.Column>
-                    {this.state.isLoggedIn && <DisplayMap {...routerProps} justify-content="left" coordinates={this.state.coordinates} />}
-                    {/* {(this.state.isLoggedIn && !this.state.showMap) && <DisplayCourtDetails {...routerProps} justify-content="left" toShowMap={this.toShowMap} />} */}
+                    {this.state.isLoggedIn && <DisplayMap {...routerProps} courts={this.state.courts} currentUser={this.state.currentUser} justify-content="left" coordinates={this.state.coordinates} />}
                   </Grid.Column>
                   <Grid.Column>
                     {this.state.isLoggedIn && <Chatroom {...routerProps} currentUser={this.state.currentUser} justify-content="right"/>}

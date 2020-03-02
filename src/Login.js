@@ -18,6 +18,7 @@ class LoginForm extends React.Component{
 
   loginData = () => {
     let loginData = this.state
+    // this.props.toShowMap()
     this.props.onSubmit(loginData)
     this.setState({
       email: "",
@@ -83,10 +84,6 @@ class LoginForm extends React.Component{
               <Button onClick={this.loginData} color='orange' fluid size='large'>
                 Login/Sign Up
               </Button>
-              {/* <br></br>
-              <Button onClick={this.props.onSignUp} color='orange' fluid size='large'>
-                Sign Up
-              </Button> */}
             </Segment>
           </Form>
         </Grid.Column>

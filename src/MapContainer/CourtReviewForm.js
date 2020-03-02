@@ -1,13 +1,60 @@
 import React from 'react'
+import { Form, Rating } from 'semantic-ui-react'
 
-class CourtReviewForm extends React.Component{
+class CourtReviewForm extends React.Component {
 
+  state = {
+    review: "",
+    rating: 0
+  }
 
+  onChangeReview = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
 
-  render(){
-    return(
+  ratingHandler = (e, data) => {
+    console.log("value of e: ", e, "value of data: ", data)
+    this.setState({
+      rating: data.rating
+    })
+  }
+
+  reviewSubmitHandler = (e) => {
+    console.log('trying to submit')
+    e.preventDefault()
+    let reviewObj = {rating: this.state.rating, content: this.state.review, user_id: this.props.currentUser.id, court_id: this.props.selectedPlace.court.id}
+    fetch(`http://localhost:3000/reviews`,{
+      method: "POST",
+      headers: {
+        'content-type': 'application/json',
+        accepts: 'application/json'
+      },
+      body: JSON.stringify(reviewObj)
+    }, this.props.addToSelectedPlace(reviewObj))
+    this.setState({
+      review: "",
+      rating: 0
+    })
+  }
+
+  
+
+  render() {
+    console.log('state: ', this.state)
+    console.log('selectedPlace: ', this.props.selectedPlace)
+    // console.log('currentUser: ', this.props.currentUser)
+    return (
       <div>
-        COURT REVIEW FORM HERE
+        <div className='court-review-form'>
+          <label>Rate this Court!</label>
+          <Rating icon='star' rating={this.state.rating} maxRating={5} onRate={(data, e) => this.ratingHandler(data, e)}/> 
+          <Form onSubmit={this.reviewSubmitHandler}>
+            <Form.TextArea name='review' value={this.state.review} onChange={this.onChangeReview} label='New Review:' placeholder='Leave a review...' />
+            <Form.Button>Submit</Form.Button>
+          </Form>
+        </div>
       </div>
     )
   }
