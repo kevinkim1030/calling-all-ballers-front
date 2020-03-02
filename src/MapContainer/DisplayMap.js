@@ -11,6 +11,7 @@ class DisplayMap extends React.Component {
     activeMarker: {},
     selectedPlace: {},
     courts: [],
+    reviews: [],
     showMap: true
   }
 
@@ -22,17 +23,28 @@ class DisplayMap extends React.Component {
       }))
   }
 
-  componentDidMount(){
-    this.fetchCourts()
+  fetchReviews = () => {
+    fetch(`http://localhost:3000/reviews`)
+      .then(resp => resp.json())
+      .then(data => this.setState({
+        reviews: data
+      }))
   }
 
-  onMarkerClick = (props, marker, e) => {
-    this.showDetails()
+  componentDidMount(){
+    this.fetchCourts()
+    this.fetchReviews()
+  }
+
+  onMarkerClick = (props, marker) => {
+    // console.log(props)
+    // console.log(marker.court.reviews)
     this.setState({
       selectedPlace: props,
       activeMarker: marker
       // showingInfoWindow: true
     })
+    this.showDetails()
   }
 
   toShowMap = () => {
@@ -59,6 +71,36 @@ class DisplayMap extends React.Component {
     />})
   }
 
+  // addToSelectedPlace = (reviewObj) => {
+  //   // console.log('hitting addToSelectedPlace')
+  //   this.setState({
+  //     selectedPlace:{
+  //       ...this.state.selectedPlace,
+  //       court:{
+  //         ...this.state.selectedPlace.court,
+  //         reviews:[...this.state.selectedPlace.court.reviews, reviewObj]
+  //       }
+  //     }
+  //   })
+  // }
+
+  addToSelectedPlace = (reviewObj) => {
+    this.setState({
+      reviews: [...this.state.reviews, reviewObj]
+    })
+  }
+
+  // resetSelectedPlaceInfo = () => {
+  //   this.setState({
+  //     selectedPlace:{
+  //       ...this.state.selectedPlace,
+  //       court:{
+  //         ...this.state.selectedPlace.court,
+  //         reviews: [...this.state.selectedPlace.court.reviews]
+  //       }
+  //     }
+  //   })
+  // }
 
   render() {
     const mapStyles = {
@@ -92,7 +134,15 @@ class DisplayMap extends React.Component {
           {this.newDisplayedCourts()} 
         </Map>
         : 
-        <DisplayCourtDetails selectedPlace={this.state.selectedPlace} toShowMap={this.toShowMap} />
+        <DisplayCourtDetails 
+          reviews={this.state.reviews} 
+          resetSelectedPlaceInfo={this.resetSelectedPlaceInfo} 
+          addToSelectedPlace={this.addToSelectedPlace} 
+          courts={this.props.courts} 
+          currentUser={this.props.currentUser} 
+          activeMarker={this.state.activeMarker} 
+          selectedPlace={this.state.selectedPlace} 
+          toShowMap={this.toShowMap} />
         }
       </div>
      
