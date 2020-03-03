@@ -1,6 +1,6 @@
 import React from 'react'
-import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react"
-import { Button } from 'semantic-ui-react'
+import { Map, GoogleApiWrapper, Marker} from "google-maps-react"
+// import { Button } from 'semantic-ui-react'
 import DisplayCourtDetails from './DisplayCourtDetails'
 
 
@@ -12,6 +12,7 @@ class DisplayMap extends React.Component {
     selectedPlace: {},
     courts: [],
     reviews: [],
+    showReviewUpdateModal: false,
     showMap: true
   }
 
@@ -37,12 +38,9 @@ class DisplayMap extends React.Component {
   }
 
   onMarkerClick = (props, marker) => {
-    // console.log(props)
-    // console.log(marker.court.reviews)
     this.setState({
       selectedPlace: props,
       activeMarker: marker
-      // showingInfoWindow: true
     })
     this.showDetails()
   }
@@ -71,41 +69,48 @@ class DisplayMap extends React.Component {
     />})
   }
 
-  // addToSelectedPlace = (reviewObj) => {
-  //   // console.log('hitting addToSelectedPlace')
-  //   this.setState({
-  //     selectedPlace:{
-  //       ...this.state.selectedPlace,
-  //       court:{
-  //         ...this.state.selectedPlace.court,
-  //         reviews:[...this.state.selectedPlace.court.reviews, reviewObj]
-  //       }
-  //     }
-  //   })
-  // }
-
   addToSelectedPlace = (reviewObj) => {
     this.setState({
       reviews: [...this.state.reviews, reviewObj]
     })
   }
 
-  // resetSelectedPlaceInfo = () => {
-  //   this.setState({
-  //     selectedPlace:{
-  //       ...this.state.selectedPlace,
-  //       court:{
-  //         ...this.state.selectedPlace.court,
-  //         reviews: [...this.state.selectedPlace.court.reviews]
-  //       }
-  //     }
-  //   })
-  // }
+  deleteReview = (reviewObj) => {
+    console.log('trying to delete')
+    let filteredReviews = this.state.reviews.filter(review => review.id !== reviewObj)
+    fetch(`http://localhost:3000/reviews/${reviewObj}`,{
+      method: "DELETE"
+    }).then(resp => resp.json())
+    .then(data => this.setState({
+      reviews: filteredReviews
+    }))
+  }
+
+  updateReview = (reviewObj) => {
+    this.setState({
+      showReviewUpdateModal: true
+    })
+    console.log('trying to update! and here is the reviewObj.id : ', reviewObj)
+    // fetch(`http://localhost:3000/reviews/${reviewObj}`,{
+    //   method: "PATCH",
+    //   accepts:{
+    //     'content-type':'application/json',
+    //     accepts: 'application/json'
+    //   },
+    //   body: JSON.stringify()
+    // })
+  }
+
+  closeReviewModal = () => {
+    this.setState({
+      showReviewUpdateModal: false
+    })
+  }
 
   render() {
     const mapStyles = {
-      width: "900px",
-      height: "900px"
+      width: "60rem",
+      height: "60rem"
     }
     let coords = {lat: this.props.coordinates.lat, lng: this.props.coordinates.lng}
     
@@ -113,7 +118,7 @@ class DisplayMap extends React.Component {
       <div className="map-container">
         {this.state.showMap ? 
         <Map
-        className={"map"}
+          className={"map"}
           google={this.props.google}
           zoom={16}
           initialCenter= {coords}
@@ -135,6 +140,9 @@ class DisplayMap extends React.Component {
         </Map>
         : 
         <DisplayCourtDetails 
+          closeReviewModal={this.closeReviewModal}
+          updateReview={this.updateReview}
+          deleteReview={this.deleteReview}
           reviews={this.state.reviews} 
           resetSelectedPlaceInfo={this.resetSelectedPlaceInfo} 
           addToSelectedPlace={this.addToSelectedPlace} 
@@ -142,7 +150,10 @@ class DisplayMap extends React.Component {
           currentUser={this.props.currentUser} 
           activeMarker={this.state.activeMarker} 
           selectedPlace={this.state.selectedPlace} 
-          toShowMap={this.toShowMap} />
+          toShowMap={this.toShowMap} 
+          fetchReviews = {this.fetchReviews}
+          showReviewUpdateModal={this.props.showReviewUpdateModal}
+          />
         }
       </div>
      

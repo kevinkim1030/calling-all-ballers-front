@@ -1,12 +1,11 @@
 import React from 'react'
 import './App.css'
-import { Route, Link, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom'
 import DisplayMap from './MapContainer/DisplayMap'
 import SearchForm from './SearchForm'
 import Login from './Login'
-import { Button, Modal, Icon, Form, Grid } from 'semantic-ui-react'
+import { Button, Modal, Form, Grid } from 'semantic-ui-react'
 import Chatroom from './ChatroomContainer/Chatroom'
-import Header from './Header'
 
 
 class App extends React.Component {
@@ -14,6 +13,7 @@ class App extends React.Component {
   state = {
     currentUser: {},
     courts: [],
+    users: [],
     isLoggedIn: false,
     isSignedUp: false,
     showModal: false,
@@ -23,7 +23,7 @@ class App extends React.Component {
       password: "",
       passwordConfirmation: ""
     },
-    coordinates:{
+    coordinates: {
       lat: 40.7829,
       lng: -73.9654
     }
@@ -31,30 +31,39 @@ class App extends React.Component {
 
   fetchCourts = () => {
     fetch(`http://localhost:3000/courts`)
-    .then(resp => resp.json())
-    .then(data => this.setState({
-      courts: data
-    }))
+      .then(resp => resp.json())
+      .then(data => this.setState({
+        courts: data
+      }))
   }
 
-  componentDidMount(){
+  fetchUsers = () => {
+    fetch(`http://localhost:3000/users`)
+      .then(resp => resp.json())
+      .then(data => this.setState({
+        users: data
+      }))
+  }
+
+  componentDidMount() {
     this.fetchCourts()
+    this.fetchUsers()
   }
 
 
   toGeoCode = (searchInput) => {
-    let address = searchInput.street+searchInput.city+searchInput.stateInitials
+    let address = searchInput.street + searchInput.city + searchInput.stateInitials
     fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
-    .then(resp => resp.json())
-    .then(data => this.setState({
-      ...this.state,
-      coordinates:{
-        ...this.state.coordinates,
+      .then(resp => resp.json())
+      .then(data => this.setState({
+        ...this.state,
+        coordinates: {
+          ...this.state.coordinates,
           lat: data["results"][0]["geometry"]["location"]["lat"],
           lng: data["results"][0]["geometry"]["location"]["lng"]
-      }
-    })
-    )
+        }
+      })
+      )
   }
 
   onSubmit = (loginData) => {
@@ -99,7 +108,6 @@ class App extends React.Component {
   }
 
   modalPush = (e) => {
-    // this.props.history.push('/main')
     e.preventDefault()
     let modalFormData = this.state.modalFormData
     fetch(`http://localhost:3000/users/${this.state.currentUser.id}`, {
@@ -127,18 +135,40 @@ class App extends React.Component {
       currentUser: {}
     }, () => this.props.history.push('/'))
   }
-  
-  render (){
-    console.log("this.state : ", this.state)
+
+  deleteUser = (e, currentUser) => {
+    let filteredUsers = this.state.users.filter(user => user.id !== currentUser.id)
+    fetch(`http://localhost:3000/users/${currentUser.id}`, {
+      method: "DELETE"
+    }).then(resp => resp.json())
+      .then(data => 
+        this.setState({
+        showModal: false,
+        users: filteredUsers,
+        currentUser: {},
+        isLoggedIn: false
+      }), () => {
+        this.props.history.push('/')
+        this.setState({
+          showModal: false,
+          users: filteredUsers,
+          currentUser: {},
+          isLoggedIn: false
+        })
+      }
+      )
+  }
+
+  render() {
     return (
       <div className="App">
         <div className="top">
-          {this.state.isLoggedIn && <Modal closeIcon onClose={this.closeModal} open={this.state.showModal} trigger={<Button className="ui button" color="blue" onClick={() => this.setState({showModal: true})}>Edit Profile Info</Button>}>
-          <Modal.Header>Update Profile Info</Modal.Header>
+          {this.state.isLoggedIn && <Modal closeIcon onClose={this.closeModal} open={this.state.showModal} trigger={<Button className="ui button" color="blue" onClick={() => this.setState({ showModal: true })}>Edit Profile Info</Button>}>
+            <Modal.Header>Update Profile Info</Modal.Header>
             <Form>
               <Form.Field>
                 <label>Email</label>
-                <input 
+                <input
                   type="text"
                   name="email"
                   placeholder='Email'
@@ -148,7 +178,7 @@ class App extends React.Component {
               </Form.Field>
               <Form.Field>
                 <label>Username</label>
-                <input 
+                <input
                   type="text"
                   name="username"
                   placeholder='Username'
@@ -158,7 +188,7 @@ class App extends React.Component {
               </Form.Field>
               <Form.Field>
                 <label>Password</label>
-                <input 
+                <input
                   type="password"
                   name="password"
                   placeholder='Password'
@@ -168,7 +198,7 @@ class App extends React.Component {
               </Form.Field>
               <Form.Field>
                 <label>Password Confirmation</label>
-                <input 
+                <input
                   type="password"
                   name="passwordConfirmation"
                   placeholder='Password Confirmation'
@@ -176,14 +206,14 @@ class App extends React.Component {
                   onChange={(e) => this.onModalFormChange(e)}
                 />
               </Form.Field>
-              <Button type="button" onClick={(e) => this.modalPush(e)} type='submit' value="Update Profile">Update User Profile Info</Button>
+              <Button onClick={(e) => this.modalPush(e)} type='submit' value="Update Profile">Update User Profile Info</Button>
+              <Button onClick={(e) => this.deleteUser(e, this.state.currentUser)} type='submit' value="Delete Account">Delete Account</Button>
             </Form>
           </Modal>}
 
           {this.state.isLoggedIn && <Button className="ui button" color="blue" onClick={this.toLogOut}>Logout</Button>}
-          {!this.state.isLoggedIn && <Header />}
         </div>
-          {!this.state.isLoggedIn && <Login onSubmit={this.onSubmit} />}
+        {!this.state.isLoggedIn && <Login onSubmit={this.onSubmit} />}
         <Switch>
           <Route
             exact
@@ -193,7 +223,7 @@ class App extends React.Component {
           <Route
             exact
             path='/main'
-            render={routerProps => 
+            render={routerProps =>
               <div>
                 {this.state.isLoggedIn && <SearchForm toGeoCode={this.toGeoCode} />}
                 <Grid columns={2}>
@@ -201,9 +231,9 @@ class App extends React.Component {
                     {this.state.isLoggedIn && <DisplayMap {...routerProps} courts={this.state.courts} currentUser={this.state.currentUser} justify-content="left" coordinates={this.state.coordinates} />}
                   </Grid.Column>
                   <Grid.Column>
-                    {this.state.isLoggedIn && <Chatroom {...routerProps} currentUser={this.state.currentUser} justify-content="right"/>}
+                    {this.state.isLoggedIn && <Chatroom {...routerProps} currentUser={this.state.currentUser} justify-content="right" />}
                   </Grid.Column>
-                </Grid> 
+                </Grid>
               </div>}
           />
         </Switch>

@@ -3,12 +3,13 @@ import Message from './Message';
 
 const OpenedChatroom = ({ messages, currentUser }) =>{
   try{
-    let chatMessages = messages.map(message => <Message key={message.id} currentUser={currentUser} message={message} users={messages[0].user}/>)
+    let chatMessages = messages.map(message => 
+      message.user_id === currentUser.id ? 
+      <Message css = {'self'} key={message.id} currentUser={currentUser} message={message} users={messages[0].user}/> : 
+      <Message css = {'other'} key={message.id} currentUser={currentUser} message={message} users={messages[0].user}/>)
     return (
-      <div>
-        <div className="ui feed">
-          {chatMessages}
-        </div>
+      <div className="ui feed">
+        {chatMessages}
       </div>
     )
   } catch{
