@@ -32,7 +32,11 @@ class CourtReviewForm extends React.Component {
         accepts: 'application/json'
       },
       body: JSON.stringify(reviewObj)
-    }, this.props.addToSelectedPlace(reviewObj))
+    }).then(resp => resp.json())
+    .then(reviewData => {
+      this.props.fetchReviews()
+      this.props.addToSelectedPlace(reviewData)
+    })
     this.setState({
       review: "",
       rating: 0
@@ -42,19 +46,14 @@ class CourtReviewForm extends React.Component {
   
 
   render() {
-    console.log('state: ', this.state)
-    console.log('selectedPlace: ', this.props.selectedPlace)
-    // console.log('currentUser: ', this.props.currentUser)
     return (
-      <div>
-        <div className='court-review-form'>
-          <label>Rate this Court!</label>
-          <Rating icon='star' rating={this.state.rating} maxRating={5} onRate={(data, e) => this.ratingHandler(data, e)}/> 
-          <Form onSubmit={this.reviewSubmitHandler}>
-            <Form.TextArea name='review' value={this.state.review} onChange={this.onChangeReview} label='New Review:' placeholder='Leave a review...' />
-            <Form.Button>Submit</Form.Button>
-          </Form>
-        </div>
+      <div className='court-review-form'>
+        <label>Rate this Court!</label>
+        <Rating icon='star' rating={this.state.rating} maxRating={5} onRate={(data, e) => this.ratingHandler(data, e)}/> 
+        <Form onSubmit={this.reviewSubmitHandler}>
+          <Form.TextArea name='review' value={this.state.review} onChange={this.onChangeReview} label='New Review:' placeholder='Leave a review...' />
+          <Form.Button>Submit</Form.Button>
+        </Form>
       </div>
     )
   }

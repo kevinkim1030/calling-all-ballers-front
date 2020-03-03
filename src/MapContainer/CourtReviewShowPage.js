@@ -3,6 +3,7 @@ import { Rating } from 'semantic-ui-react'
 
 class CourtReviewShowPage extends React.Component{
 
+
   toViewMap = () => {
     this.props.toShowMap()
     // this.props.resetSelectedPlaceInfo()
@@ -11,7 +12,7 @@ class CourtReviewShowPage extends React.Component{
   
   render(){
     let filteredReviews
-    let filteredRatings
+    // let filteredRatings
     let sum
     let avgRating
     if (!!this.props.selectedPlace.court){
@@ -21,10 +22,7 @@ class CourtReviewShowPage extends React.Component{
         sum += filteredReviews[i].rating
       }
       avgRating = sum/filteredReviews.length
-
     }
-    console.log('this.props.reviews :', this.props.reviews)
-    console.log('filteredReviews : ', filteredReviews)
 
     return(
       <div className='court-show-page'>

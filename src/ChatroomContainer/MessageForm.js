@@ -28,7 +28,6 @@ class MessageForm extends Component {
   }
 
   handleSubmit = e => {
-    // debugger
     e.preventDefault()
     this.createMessage()
     this.setState({

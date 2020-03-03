@@ -18,7 +18,6 @@ class LoginForm extends React.Component{
 
   loginData = () => {
     let loginData = this.state
-    // this.props.toShowMap()
     this.props.onSubmit(loginData)
     this.setState({
       email: "",
@@ -34,7 +33,7 @@ class LoginForm extends React.Component{
       <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle' className="basketballpic">
         <Grid.Column  className="login-form" style={{ maxWidth: 450 }}>
           <Header as='h1' color='orange' textAlign='center'>
-            <Image src='/favicon.ico' /> Log-in to your account
+            <Image src='/favicon.ico' /> Calling All Ballers <Image src='/favicon.ico' />
           </Header>
           <Form size='large'>
             <Segment stacked>
@@ -42,7 +41,7 @@ class LoginForm extends React.Component{
                 name="email"
                 value={this.state.email}
                 onChange={(e) => this.onChange(e)}
-                // required 
+                required 
                 fluid 
                 icon='user' 
                 iconPosition='left' 
@@ -52,7 +51,7 @@ class LoginForm extends React.Component{
                 name="username"
                 value={this.state.username}
                 onChange={(e) => this.onChange(e)}
-                // required
+                required
                 fluid
                 icon='user'
                 iconPosition='left'
@@ -63,7 +62,7 @@ class LoginForm extends React.Component{
                 name="password"
                 value={this.state.password}
                 onChange={(e) => this.onChange(e)}
-                // required
+                required
                 fluid
                 icon='lock'
                 iconPosition='left'
@@ -74,7 +73,7 @@ class LoginForm extends React.Component{
                 name="passwordConfirmation"
                 value={this.state.passwordConfirmation}
                 onChange={(e) => this.onChange(e)}
-                // required
+                required
                 fluid
                 icon='lock'
                 iconPosition='left'
