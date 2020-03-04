@@ -1,8 +1,11 @@
 import React from 'react'
-import { Rating } from 'semantic-ui-react'
+import { Rating, Button } from 'semantic-ui-react'
 
 class CourtReviewShowPage extends React.Component{
 
+  state = {
+    avgRating: 0
+  }
 
   toViewMap = () => {
     this.props.toShowMap()
@@ -31,7 +34,7 @@ class CourtReviewShowPage extends React.Component{
         <h3>{filteredReviews.length} reviews with average rating of {" "}
           {!!this.props.selectedPlace.court && <Rating size="massive" disabled icon="star" maxRating={5} defaultRating={avgRating} />}
         </h3>
-        <button onClick={this.toViewMap}>Back to Map</button>
+        <Button onClick={this.toViewMap}>Back to Map</Button>
         <hr></hr>
       </div>
     )

@@ -60,6 +60,7 @@ class DisplayMap extends React.Component {
   newDisplayedCourts = () => {
     return this.state.courts.map(court => {
       return <Marker 
+        icon={{url:"https://i.pinimg.com/originals/70/d8/e2/70d8e2905ff447ab7138ca2dbd628119.png", scaledSize: {width: 40, height: 40}}}
         key={court.id}
         name={court.name}
         location={court.location}
@@ -109,8 +110,8 @@ class DisplayMap extends React.Component {
 
   render() {
     const mapStyles = {
-      width: "60rem",
-      height: "60rem"
+      width: "75rem",
+      height: "75rem"
     }
     let coords = {lat: this.props.coordinates.lat, lng: this.props.coordinates.lng}
     
@@ -134,7 +135,8 @@ class DisplayMap extends React.Component {
           {this.props.coordinates.lat !== "" && <Marker 
             position={coords}
             name={"Current Location"}
-            icon={{url:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png", scaledSize: {width: 60, height: 70}}}
+            // icon={{url:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png", scaledSize: {width: 60, height: 70}}}
+            icon={{url:"https://static.thenounproject.com/png/14064-200.png", scaledSize: {width: 60, height: 60}}}
             />}
           {this.newDisplayedCourts()} 
         </Map>
