@@ -17,6 +17,7 @@ class App extends React.Component {
     isLoggedIn: false,
     isSignedUp: false,
     showModal: false,
+    showMap: true,
     modalFormData: {
       email: "",
       username: "",
@@ -92,7 +93,7 @@ class App extends React.Component {
             reviews: userData.reviews
           },
           isLoggedIn: true
-        }, () => this.props.history.push('/main'))
+        }, () => this.props.history.push('/home'))
       })
   }
 
@@ -158,11 +159,23 @@ class App extends React.Component {
       )
   }
 
+  toShowMap = () => {
+    this.setState({
+      showMap: true
+    })
+  }
+
+  showDetails = () => {
+    this.setState({
+      showMap: false
+    })
+  }
+
   render() {
     return (
       <div className="App">
         <div className="top">
-          {this.state.isLoggedIn && <Modal basic size='mini' className="user-update-modal" closeIcon onClose={this.closeModal} open={this.state.showModal} trigger={<Button className="ui button" color="blue" onClick={() => this.setState({ showModal: true })}>Edit Profile Info</Button>}>
+          {this.state.isLoggedIn && <Modal basic size='mini' className="user-update-modal" closeIcon onClose={this.closeModal} open={this.state.showModal} trigger={<Button className="ui button head" color="blue" onClick={() => this.setState({ showModal: true })}>Edit Profile Info</Button>}>
             <Modal.Header>Update Profile Info</Modal.Header>
             <Form>
               <Form.Field>
@@ -210,7 +223,7 @@ class App extends React.Component {
             </Form>
           </Modal>}
 
-          {this.state.isLoggedIn && <Button className="ui button" color="blue" onClick={this.toLogOut}>Logout</Button>}
+          {this.state.isLoggedIn && <Button className="ui button head" color="red" onClick={this.toLogOut}>Logout</Button>}
         </div>
         {!this.state.isLoggedIn && <Login onSubmit={this.onSubmit} />}
         <Switch>
@@ -221,13 +234,13 @@ class App extends React.Component {
           />
           <Route
             exact
-            path='/main'
+            path='/home'
             render={routerProps =>
               <div>
-                {this.state.isLoggedIn && <SearchForm toGeoCode={this.toGeoCode} />}
+                {this.state.isLoggedIn && <SearchForm toShowMap={this.toShowMap} toGeoCode={this.toGeoCode} />}
                 <Grid columns={2}>
                   <Grid.Column>
-                    {this.state.isLoggedIn && <DisplayMap {...routerProps} courts={this.state.courts} currentUser={this.state.currentUser} justify-content="left" coordinates={this.state.coordinates} />}
+                    {this.state.isLoggedIn && <DisplayMap {...routerProps} toShowMap={this.toShowMap} showDetails={this.showDetails} showMap={this.state.showMap} courts={this.state.courts} currentUser={this.state.currentUser} justify-content="left" coordinates={this.state.coordinates} />}
                   </Grid.Column>
                   <Grid.Column>
                     {this.state.isLoggedIn && <Chatroom {...routerProps} currentUser={this.state.currentUser} justify-content="right" />}
