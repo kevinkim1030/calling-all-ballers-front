@@ -52,7 +52,8 @@ class CourtReviewForm extends React.Component {
         <Rating icon='star' rating={this.state.rating} maxRating={5} onRate={(data, e) => this.ratingHandler(data, e)}/> 
         <Form onSubmit={this.reviewSubmitHandler}>
           <Form.TextArea name='review' value={this.state.review} onChange={this.onChangeReview} label='New Review:' placeholder='Leave a review...' />
-          <Form.Button>Submit</Form.Button>
+          {/* <Form.Button>Submit</Form.Button> */}
+          <button type='submit' className='ui basic blue button'>Send</button>
         </Form>
       </div>
     )

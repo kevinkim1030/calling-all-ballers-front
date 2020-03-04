@@ -91,8 +91,7 @@ class App extends React.Component {
             password: userData.password,
             reviews: userData.reviews
           },
-          isLoggedIn: true,
-          showMap: true
+          isLoggedIn: true
         }, () => this.props.history.push('/main'))
       })
   }
@@ -163,7 +162,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <div className="top">
-          {this.state.isLoggedIn && <Modal closeIcon onClose={this.closeModal} open={this.state.showModal} trigger={<Button className="ui button" color="blue" onClick={() => this.setState({ showModal: true })}>Edit Profile Info</Button>}>
+          {this.state.isLoggedIn && <Modal basic size='mini' className="user-update-modal" closeIcon onClose={this.closeModal} open={this.state.showModal} trigger={<Button className="ui button" color="blue" onClick={() => this.setState({ showModal: true })}>Edit Profile Info</Button>}>
             <Modal.Header>Update Profile Info</Modal.Header>
             <Form>
               <Form.Field>
