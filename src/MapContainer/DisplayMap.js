@@ -12,8 +12,8 @@ class DisplayMap extends React.Component {
     selectedPlace: {},
     courts: [],
     reviews: [],
-    showReviewUpdateModal: false,
-    showMap: true
+    showReviewUpdateModal: false
+    // showMap: true
   }
 
   fetchCourts = () => {
@@ -22,6 +22,11 @@ class DisplayMap extends React.Component {
       .then(courtData => this.setState({
         courts: courtData
       }))
+  }
+
+  addNewReivew = (someNewReview) => {
+    // setState and update reviews to include someNewReivew
+
   }
 
   fetchReviews = () => {
@@ -42,19 +47,7 @@ class DisplayMap extends React.Component {
       selectedPlace: props,
       activeMarker: marker
     })
-    this.showDetails()
-  }
-
-  toShowMap = () => {
-    this.setState({
-      showMap: true
-    })
-  }
-
-  showDetails = () => {
-    this.setState({
-      showMap: false
-    })
+    this.props.showDetails()
   }
 
   newDisplayedCourts = () => {
@@ -71,6 +64,7 @@ class DisplayMap extends React.Component {
   }
 
   addToSelectedPlace = (reviewObj) => {
+    console.log(reviewObj)
     this.setState({
       reviews: [...this.state.reviews, reviewObj]
     })
@@ -110,14 +104,14 @@ class DisplayMap extends React.Component {
 
   render() {
     const mapStyles = {
-      width: "75rem",
-      height: "75rem"
+      width: "70rem",
+      height: "70rem"
     }
     let coords = {lat: this.props.coordinates.lat, lng: this.props.coordinates.lng}
     
     return (
       <div className="map-container">
-        {this.state.showMap ? 
+        {this.props.showMap ? 
         <Map
           className={"map"}
           google={this.props.google}
@@ -152,7 +146,7 @@ class DisplayMap extends React.Component {
           currentUser={this.props.currentUser} 
           activeMarker={this.state.activeMarker} 
           selectedPlace={this.state.selectedPlace} 
-          toShowMap={this.toShowMap} 
+          toShowMap={this.props.toShowMap} 
           fetchReviews = {this.fetchReviews}
           showReviewUpdateModal={this.props.showReviewUpdateModal}
           />

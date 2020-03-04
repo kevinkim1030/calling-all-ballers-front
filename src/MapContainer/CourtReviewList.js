@@ -3,6 +3,15 @@ import ReviewCard from './ReviewCard'
 
 class CourtReviewList extends React.Component{
 
+  // scrollToBottom = () => {
+  //   let reviewListForm = document.querySelector('.review-list-form')
+  //   reviewListForm.scrollTop = reviewListForm.scrollHeight
+  // }
+
+  // componentDidUpdate(){
+  //   this.scrollToBottom()
+  // }
+
   render(){
     let filteredReviews
     let displayedFilteredReviews
@@ -13,9 +22,8 @@ class CourtReviewList extends React.Component{
     return(
       <div className='court-review-list'>
           <ul>
-            <hr></hr>
+            {/* <hr></hr> */}
               {displayedFilteredReviews}
-            <hr></hr>
           </ul>
       </div>
     )

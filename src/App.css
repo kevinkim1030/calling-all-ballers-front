@@ -71,7 +71,7 @@ body {
   width: 100%;
   /* padding: 0 5%; */
   padding-left: 10%;
-  padding-top: 5%;
+  padding-top: 2%;
 }
 
 @keyframes App-logo-spin {
@@ -130,10 +130,11 @@ h2 {
   width: 100%;
   height: 95%;
   overflow-y: scroll;
+  border: 1px solid lightgray;
 }
 
 .chat-container {
-  width: 100%;
+  width: 80%;
   margin: 0 2%;
   padding-right: 5%;
 }
@@ -207,6 +208,14 @@ h2 {
 
 .ui.feed {
   width: 100%;
+  height: 100%;
+}
+
+.ui.button.head {
+  display: flex;
+  align-items: flex-end;
+  /* justify-content: space-around; */
+  height: 40px;
 }
 
 .content {

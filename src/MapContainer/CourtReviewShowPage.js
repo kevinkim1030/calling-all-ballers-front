@@ -11,9 +11,8 @@ class CourtReviewShowPage extends React.Component{
     this.props.toShowMap()
     // this.props.resetSelectedPlaceInfo()
   }
-
   
-  render(){
+  getAvgRating = () => {
     let filteredReviews
     // let filteredRatings
     let sum
@@ -25,16 +24,23 @@ class CourtReviewShowPage extends React.Component{
         sum += filteredReviews[i].rating
       }
       avgRating = sum/filteredReviews.length
+      return avgRating
     }
-
+  }
+  
+  render(){
+    let filteredReviews
+    if (!!this.props.selectedPlace.court){
+      filteredReviews = this.props.reviews.filter(review => review.court_id === this.props.selectedPlace.court.id)
+    }
     return(
       <div className='court-show-page'>
         <h2>{this.props.selectedPlace.name}</h2>
         <h3>{this.props.selectedPlace.location}</h3>
-        <h3>{filteredReviews.length} reviews with average rating of {" "}
-          {!!this.props.selectedPlace.court && <Rating size="massive" disabled icon="star" maxRating={5} defaultRating={avgRating} />}
+        <h3>{filteredReviews.length} {filteredReviews.length === 1 && "review with an average rating of "} {filteredReviews.length === 0 && "reviews with an average rating of "} {filteredReviews.length > 1 && "reviews with an average rating of "}
+          {!!this.props.selectedPlace.court && <Rating size="huge" disabled icon="star" maxRating={5} rating={this.getAvgRating()} />}
         </h3>
-        <Button onClick={this.toViewMap}>Back to Map</Button>
+        <Button color="blue" onClick={this.toViewMap}>Back to Map</Button>
         <hr></hr>
       </div>
     )

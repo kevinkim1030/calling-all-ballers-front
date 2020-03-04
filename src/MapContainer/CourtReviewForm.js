@@ -15,14 +15,13 @@ class CourtReviewForm extends React.Component {
   }
 
   ratingHandler = (e, data) => {
-    console.log("value of e: ", e, "value of data: ", data)
+    // console.log("value of e: ", e, "value of data: ", data)
     this.setState({
       rating: data.rating
     })
   }
 
   reviewSubmitHandler = (e) => {
-    console.log('trying to submit')
     e.preventDefault()
     let reviewObj = {rating: this.state.rating, content: this.state.review, user_id: this.props.currentUser.id, court_id: this.props.selectedPlace.court.id}
     fetch(`http://localhost:3000/reviews`,{
